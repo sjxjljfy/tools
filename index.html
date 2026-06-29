@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>师者工具箱 - 一线教师的数字化工作台</title>
+    <style>
+        /* ================= 基础变量与重置 ================= */
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --primary-dark: #4338ca;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ================= 顶部导航 ================= */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.25);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-login {
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-login:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ================= Hero 区域 ================= */
+        .hero {
+            text-align: center;
+            padding: 36px 24px 24px;
+            background: linear-gradient(180deg, #ffffff 0%, var(--bg-body) 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(24px, 4vw, 34px);
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--primary), #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: var(--text-sub);
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .search-box {
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 24px 14px 48px;
+            font-size: 15px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            outline: none;
+            background: white;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), var(--shadow-md);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--text-sub);
+        }
+
+        /* ================= 主体内容区 ================= */
+        .main-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        .categories {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none; 
+        }
+        .categories::-webkit-scrollbar { display: none; }
+
+        .cat-tag {
+            padding: 8px 20px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .cat-tag:hover { border-color: var(--primary); color: var(--primary); }
+        .cat-tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+
+        /* ================= 工具卡片网格 ================= */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
+        }
+
+        .tool-card.disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+        .tool-card.disabled:hover {
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: transform 0.3s;
+        }
+        .tool-card:hover .card-icon { transform: scale(1.1) rotate(-5deg); }
+
+        .icon-blue { background: #dbeafe; }
+        .icon-green { background: #dcfce7; }
+        .icon-purple { background: #f3e8ff; }
+        .icon-orange { background: #ffedd5; }
+        .icon-pink { background: #fce7f3; }
+        .icon-gray { background: #f1f5f9; }
+
+        .card-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .badge-hot { background: #fef2f2; color: #ef4444; }
+        .badge-new { background: #ecfdf5; color: #10b981; }
+        .badge-soon { background: #f8fafc; color: #94a3b8; border: 1px dashed #cbd5e1; }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: var(--text-sub);
+            flex: 1;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-stats {
+            font-size: 13px;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .tool-card:hover .card-arrow {
+            background: var(--primary);
+            color: white;
+            transform: translateX(4px);
+        }
+        .tool-card.disabled .card-arrow { display: none; }
+
+        /* ================= 底部 ================= */
+        footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--text-sub);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        /* ================= Toast 提示 ================= */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(15, 23, 42, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ================= 响应式 ================= */
+        @media (max-width: 768px) {
+            .tools-grid { grid-template-columns: 1fr; }
+            .hero { padding: 28px 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🍎</div>
+                <span>师者工具箱</span>
+            </a>
+            <div class="nav-actions">
+                <button class="btn-login">登录 / 注册</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero 首屏 -->
+    <section class="hero">
+        <h1>赋能一线教师，让教学<span>更轻松</span></h1>
+        <p>专为教育工作者打造的数字化工作台，集成作业、成绩、互动等核心工具，助力智慧课堂与高效管理。</p>
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="搜索工具，如：成绩分析、点名、排课...">
+        </div>
+    </section>
+
+    <!-- 主体内容 -->
+    <main class="main-content">
+        <!-- 分类标签 -->
+        <div class="categories" id="categories">
+            <div class="cat-tag active" data-cat="all">全部工具</div>
+            <div class="cat-tag" data-cat="manage">教学管理</div>
+            <div class="cat-tag" data-cat="analysis">学情分析</div>
+            <div class="cat-tag" data-cat="class">课堂辅助</div>
+            <div class="cat-tag" data-cat="office">办公效率</div>
+        </div>
+
+        <!-- 工具网格 -->
+        <div class="tools-grid" id="toolsGrid"></div>
+    </main>
+
+    <!-- 底部 -->
+    <footer>
+        <p>© 2024 师者工具箱 (TeacherToolKit) | 致力于用技术赋能教育 | 保留所有权利</p>
+    </footer>
+
+    <!-- 提示弹窗 -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================= 工具数据配置 =================
+        const tools = [
+            {
+                id: 1, title: '作业登记与分析', cat: 'manage',
+                desc: '快速记录每日作业布置与提交情况，支持一键催交、学情统计与未完成名单导出。',
+                icon: '📝', iconClass: 'icon-blue', badge: 'hot', badgeText: '热门',
+                status: 'active', uses: '12.5k',
+                link: './homework/index.html' 
+            },
+            {
+                id: 2, title: '成绩可视化分析', cat: 'analysis',
+                desc: '导入Excel成绩，自动生成单科走势折线图、多科能力雷达图及班级对比报表。',
+                icon: '📊', iconClass: 'icon-green', badge: 'hot', badgeText: '核心',
+                status: 'active', uses: '8.2k',
+                link: './score-system/index.html' 
+            },
+            {
+                id: 3, title: '课堂互动工具', cat: 'class',
+                desc: '包含随机点名、分组抽签、课堂计时器、噪音监测等，轻松活跃课堂气氛。',
+                icon: '🙋‍♂️', iconClass: 'icon-purple', badge: 'new', badgeText: '上新',
+                status: 'active', uses: '15.1k',
+                link: 'http://10.20.243.69/%E2%80%8Cinteractive/index.html'
+            },
+            {
+                id: 4, title: '微课平台', cat: 'class',
+                desc: '提供丰富的微课视频资源，支持在线教学，助力学生自主学习。',
+                icon: '🎬', iconClass: 'icon-orange', badge: 'hot', badgeText: '热门',
+                status: 'active', uses: '9.6k',
+                link: 'http://10.20.243.69:8081' 
+            },
+            {
+                id: 5, title: '班主任AI评语系统', cat: 'office',
+                desc: '输入学生性格与学习特点标签，AI 自动生成个性化、有温度的期末班主任专属评语。',
+                icon: '✨', iconClass: 'icon-pink', badge: 'new', badgeText: '上新',
+                status: 'active', uses: '5.2k',
+                link: './CommentCraft-AI/index.html' 
+            },
+            {
+                id: 6, title: '班级积分管理', cat: 'class',
+                desc: '记录学生日常加减分，生成班级积分榜，支持兑换奖励与导出表扬信。',
+                icon: '🏆', iconClass: 'icon-gray', badge: 'soon', badgeText: '即将推出',
+                status: 'disabled', uses: '-'
+            },
+            {
+                id: 7, title: '教案资源云盘', cat: 'office',
+                desc: '云端存储教学资料，支持按学科、年级分类，提供全文检索与在线预览。',
+                icon: '📁', iconClass: 'icon-gray', badge: 'soon', badgeText: '即将推出',
+                status: 'disabled', uses: '-'
+            },
+            {
+                id: 8, title: '家校沟通助手', cat: 'manage',
+                desc: '提供家长会通知、放假安排、成绩汇报等标准话术模板，一键生成精美长图。',
+                icon: '💌', iconClass: 'icon-gray', badge: 'soon', badgeText: '即将推出',
+                status: 'disabled', uses: '-'
+            },
+            {
+                id: 9, title: '学生请假审批', cat: 'manage',
+                desc: '家长在线提交请假申请，教师移动端一键审批，自动同步至考勤系统。',
+                icon: '📋', iconClass: 'icon-gray', badge: 'soon', badgeText: '即将推出',
+                status: 'disabled', uses: '-'
+            }
+        ];
+
+        // ================= 渲染与交互逻辑 =================
+        const grid = document.getElementById('toolsGrid');
+        const toast = document.getElementById('toast');
+        const searchInput = document.getElementById('searchInput');
+        const categories = document.getElementById('categories');
+        
+        let currentCat = 'all';
+        let searchText = '';
+
+        function renderTools() {
+            const filtered = tools.filter(tool => {
+                const matchCat = currentCat === 'all' || tool.cat === currentCat;
+                const matchSearch = tool.title.includes(searchText) || tool.desc.includes(searchText);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-sub);">😔 没有找到匹配的工具，换个关键词试试吧</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(tool => `
+                <div class="tool-card ${tool.status}" data-id="${tool.id}">
+                    <div class="card-header">
+                        <div class="card-icon ${tool.iconClass}">${tool.icon}</div>
+                        <span class="card-badge badge-${tool.badge}">${tool.badgeText}</span>
+                    </div>
+                    <h3 class="card-title">${tool.title}</h3>
+                    <p class="card-desc">${tool.desc}</p>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <span>👁️ ${tool.uses} 次使用</span>
+                        </div>
+                        ${tool.status === 'active' ? '<div class="card-arrow">→</div>' : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            bindCardEvents();
+        }
+
+        function bindCardEvents() {
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = parseInt(card.getAttribute('data-id'));
+                    const tool = tools.find(t => t.id === id);
+                    
+                    if (tool.status === 'disabled') {
+                        showToast('🚧 该工具正在快马加鞭开发中，敬请期待！');
+                    } else {
+                        if (tool.link) {
+                            window.open(tool.link, '_blank');
+                        } else {
+                            showToast(`✅ 正在进入【${tool.title}】...`);
+                        }
+                    }
+                });
+            });
+        }
+
+        // 分类切换
+        categories.addEventListener('click', (e) => {
+            if (e.target.classList.contains('cat-tag')) {
+                document.querySelectorAll('.cat-tag').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCat = e.target.getAttribute('data-cat');
+                renderTools();
+            }
+        });
+
+        // 搜索防抖
+        let searchTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                searchText = e.target.value.trim();
+                renderTools();
+            }, 300);
+        });
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // 初始化
+        renderTools();
+    </script>
+</body>
+</html>
